@@ -63,5 +63,7 @@ runs:
     - id: open_pr
       run: |
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
-        gh pr create --title "fix: $title (#${{ inputs.issue_number }})" --body "Fixes #${{ inputs.issue_number }}"
+        gh pr create \
+          --title "fix: $title (#${{ inputs.issue_number }})" \
+          --body "Fixes #${{ inputs.issue_number }}<br>Created by [Issue2PR](https://github.com/ZanSara/issue2pr). Please review carefully."
       shell: bash
