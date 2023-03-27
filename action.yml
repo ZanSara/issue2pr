@@ -24,11 +24,47 @@ runs:
         echo "issue-data=$(gh issue view ${{ inputs.issue_number }} --json=title,body,labels)" >> $GITHUB_OUTPUT
       shell: bash
 
-    - run: |
+    - id: make_comment
+      run: |
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         body=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".body")
         labels=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".labels")
 
-        
         gh issue comment ${{ inputs.issue_number }} --body "#$title<br> $body <hr> **Labels**: $labels <hr>"
+      shell: bash
+
+    - id: create_patch
+      run: |
+        echo "\
+        --- test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
+        +++ test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
+        @@ -4,4 +4,4 @@
+            """
+            Adds two numbers together
+            """
+        -    return first_number - second_number
+        +    return first_number + second_number
+        " >> changes.patch
+      shell: bash
+
+    - id: apply_patch
+      run: |
+        git checkout -b fix/${{ inputs.issue_number }}
+        git apply changes.patch
+        rm changes.patch
+      shell: bash
+
+    - id: push_changes
+      run: |
+        git add .
+        git commit -m 'fix issue ${{ inputs.issue_number }}'
+        git push -u origin fix/${{ inputs.issue_number }}
+      shell: bash
+
+    - id: open_pr
+      run: |
+        title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
+        body=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".body")
+
+        gh pr create --title 'fix: $title(#${{ inputs.issue_number }})' --body $body
       shell: bash
