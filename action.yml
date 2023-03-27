@@ -15,5 +15,5 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
-    - run: gh issue comment ${{ inputs.issue_id }} "Hello!"
+    - run: gh issue comment ${{ inputs.issue_id }} --body "Hello!"
       shell: bash
