@@ -9,7 +9,7 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/issue2pr
+      - uses: actions/issue2pr@v1
         with:
           issue_id: ${{ github.event.issue.node_id }}
     
