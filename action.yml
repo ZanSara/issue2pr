@@ -40,9 +40,9 @@ runs:
         --- test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
         +++ test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
         @@ -4,4 +4,4 @@
-            \"\"\"
-            Adds two numbers together
-            \"\"\"
+             """
+             Adds two numbers together
+             """
         -    return first_number - second_number
         +    return first_number + second_number
         " >> changes.patch
