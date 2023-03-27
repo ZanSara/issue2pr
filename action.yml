@@ -14,9 +14,12 @@ outputs:
     description: "number of the PR opened"
     value: ${{ steps.open-pr.pr-number }}
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
-    - run: GH_TOKEN=${{ inputs.gh_token }} gh issue comment ${{ inputs.issue_id }} --body "Hello!"
+    - run: gh issue comment ${{ inputs.issue_id }} --body "Hello!"
       shell: bash
