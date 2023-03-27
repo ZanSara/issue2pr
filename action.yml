@@ -35,7 +35,7 @@ runs:
 
     - id: create_patch
       run: |
-        echo "\
+        echo `\
         --- test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
         +++ test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
         @@ -4,4 +4,4 @@
@@ -44,7 +44,7 @@ runs:
             """
         -    return first_number - second_number
         +    return first_number + second_number
-        " >> changes.patch
+        ` >> changes.patch
       shell: bash
 
     - id: apply_patch
