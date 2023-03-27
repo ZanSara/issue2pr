@@ -27,7 +27,7 @@ runs:
 
     - id: make_comment
       run: |
-        gh issue comment ${{ inputs.issue_number }} --body ":sparkles: Issue2PR is taking care of this! :sparkles:"
+        gh issue comment ${{ inputs.issue_number }} --body ":sparkles: Issue2PR is taking care of this issue. Hold on... :sparkles:"
       shell: bash
 
     - id: create_patch
