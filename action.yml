@@ -27,11 +27,7 @@ runs:
 
     - id: make_comment
       run: |
-        title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
-        body=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".body")
-        labels=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".labels")
-
-        gh issue comment ${{ inputs.issue_number }} --body "#$title<br> $body <hr> **Labels**: $labels <hr>"
+        gh issue comment ${{ inputs.issue_number }} --body "`issue2pr` is taking care of this! :rocket:"
       shell: bash
 
     - id: create_patch
