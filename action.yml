@@ -20,7 +20,7 @@ runs:
     - uses: actions/checkout@v3
 
     - id: read_issue
-      run: echo "issue-content=$(gh issue view ${{ inputs.issue_number }}" >> $GITHUB_OUTPUT
+      run: echo "issue-content=$(gh issue view ${{ inputs.issue_number }})" >> $GITHUB_OUTPUT
       shell: bash
 
     - run: gh issue comment ${{ inputs.issue_number }} --body "Here is the issue so far:<br> ${{ steps.read_issue.outputs.issue-content }}"
