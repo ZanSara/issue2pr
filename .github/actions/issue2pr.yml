@@ -1,0 +1,23 @@
+name: Submit PR
+
+on:
+  issues:
+    types: 
+      - opened
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN_PROJECT_ACCESS }}
+  ISSUE_ID: ${{ github.event.issue.node_id }}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Notify user
+        run: gh issue comment $ISSUE_ID --body "Hi from GitHub CLI"
+
+    
