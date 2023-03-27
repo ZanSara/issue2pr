@@ -25,9 +25,10 @@ runs:
       shell: bash
 
     - run: |
+        raw=${{ steps.read_issue.outputs.issue-content }}
         all=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".")
         title=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".title")
         body=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".body")
         labels=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".labels")
-        gh issue comment ${{ inputs.issue_number }} --body "Here is the issue so far:<br> #$title<br> $body <hr> **Labels**: $labels <hr>"
+        gh issue comment ${{ inputs.issue_number }} --body "$raw <br> $all <br> Here is the issue so far:<br> #$title<br> $body <hr> **Labels**: $labels <hr>"
       shell: bash
