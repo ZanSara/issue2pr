@@ -2,6 +2,9 @@ name: Issue2PR
 description: 'Submits PRs to fix issues'
 
 inputs:
+  gh_token:
+    description: 'your GH token'
+    requited: true
   issue_id:
     description: 'id of the issue to submit a PR for'
     required: true
@@ -15,5 +18,5 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
-    - run: gh issue comment ${{ inputs.issue_id }} --body "Hello!"
+    - run: GH_TOKEN=${{ inputs.gh_token }} gh issue comment ${{ inputs.issue_id }} --body "Hello!"
       shell: bash
