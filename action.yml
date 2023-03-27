@@ -51,7 +51,7 @@ runs:
     - id: apply_patch
       run: |
         git checkout -b fix/${{ inputs.issue_number }}
-        git apply --whitespace=fix changes.patch
+        git apply --reject --whitespace=fix changes.patch
         rm changes.patch
       shell: bash
 
