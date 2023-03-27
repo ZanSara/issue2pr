@@ -65,5 +65,5 @@ runs:
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         gh pr create \
           --title "fix: $title (#${{ inputs.issue_number }})" \
-          --body "Fixes #${{ inputs.issue_number }}<br>Created by [Issue2PR](https://github.com/ZanSara/issue2pr). Please review carefully."
+          --body "Fixes #${{ inputs.issue_number }}<hr>_Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
       shell: bash
