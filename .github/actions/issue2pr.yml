@@ -1,23 +1,18 @@
-name: Submit PR
+name: Issue2PR
+description: 'Submits PRs to fix issues'
 
-on:
-  issues:
-    types: 
-      - opened
+inputs:
+  issue_id:
+    description: 'id of the issue to submit a PR for'
+    required: true
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GH_TOKEN_PROJECT_ACCESS }}
-  ISSUE_ID: ${{ github.event.issue.node_id }}
+outputs:
+  pr-number:
+    description: "number of the PR opened"
+    value: ${{ steps.open-pr.pr-number }}
 
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-    
-      - name: Clone repo
-        uses: actions/checkout@v3
-
-      - name: Notify user
-        run: gh issue comment $ISSUE_ID --body "Hi from GitHub CLI"
-
-    
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - run: gh issue comment ${{ inputs.issue_id }} "Hello!"
