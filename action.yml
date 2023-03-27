@@ -17,7 +17,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
 
     - id: read_issue
       run: |
@@ -33,11 +32,14 @@ runs:
         gh issue comment ${{ inputs.issue_number }} --body "#$title<br> $body <hr> **Labels**: $labels <hr>"
       shell: bash
 
+    - id: checkout
+      uses: actions/checkout@v3
+
     - id: create_patch
       run: |
         echo "
-        --- test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
-        +++ test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
+        --- test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
+        +++ test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
         @@ -4,4 +4,4 @@
             \"\"\"
             Adds two numbers together
