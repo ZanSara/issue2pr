@@ -18,5 +18,10 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
-    - run: gh issue comment ${{ inputs.issue_number }} --body "Hello!"
+
+    - id: read_issue
+      run: echo "issue-content=$(gh issue read ${{ inputs.issue_number }})" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - run: gh issue comment ${{ inputs.issue_number }} --body "Here is the issue so far: " $issue-content
       shell: bash
