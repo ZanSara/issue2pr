@@ -17,6 +17,8 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - id: checkout
+      uses: actions/checkout@v3
 
     - id: read_issue
       run: |
@@ -31,9 +33,6 @@ runs:
 
         gh issue comment ${{ inputs.issue_number }} --body "#$title<br> $body <hr> **Labels**: $labels <hr>"
       shell: bash
-
-    - id: checkout
-      uses: actions/checkout@v3
 
     - id: create_patch
       run: |
