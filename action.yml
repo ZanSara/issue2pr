@@ -66,5 +66,5 @@ runs:
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         body=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".body")
 
-        gh pr create --title 'fix: $title(#${{ inputs.issue_number }})' --body $body
+        gh pr create --title 'fix: $title(#${{ inputs.issue_number }})' --body "Fixes #${{ inputs.issue_number }}<hr>$body"
       shell: bash
