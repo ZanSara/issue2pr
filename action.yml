@@ -25,6 +25,7 @@ runs:
       shell: bash
 
     - run: |
+        all=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".")
         title=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".title")
         body=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".body")
         labels=$(echo '${{ steps.read_issue.outputs.issue-content }}' | jq -r ".labels")
