@@ -23,5 +23,6 @@ runs:
       run: echo "issue-content=$(gh issue view ${{ inputs.issue_number }} --json=title,body,labels)" >> $GITHUB_OUTPUT
       shell: bash
 
-    - run: gh issue comment ${{ inputs.issue_number }} --body 'Here is the issue so far:<br> #${{ steps.read_issue.outputs.issue-content.title }}<br> ${{ steps.read_issue.outputs.issue-content.body }} <hr> **Labels**: ${{ steps.read_issue.outputs.issue-content.labels }} <hr> '
+    - run: |
+        gh issue comment ${{ inputs.issue_number }} --body "Here is the issue so far:<br> #${{ steps.read_issue.outputs.issue-content.title }}<br> ${{ steps.read_issue.outputs.issue-content.body }} <hr> **Labels**: ${{ steps.read_issue.outputs.issue-content.labels }} <hr>"
       shell: bash
