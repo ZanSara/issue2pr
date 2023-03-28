@@ -82,7 +82,7 @@ runs:
               rm changes.patch
               break
           else
-              $FEEDBACK="Patch failed, try again!"
+              FEEDBACK="Patch failed, try again!"
           fi
         done
         git branch -d fix/${{ inputs.issue_number }}
