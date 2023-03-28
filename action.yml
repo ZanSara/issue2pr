@@ -29,7 +29,7 @@ runs:
 
     - id: load_codebase
       run: |
-        CODEBASE='
+        echo "codebase='
         test-issue2pr/test/function_to_fix.py
         
         ```
@@ -39,8 +39,7 @@ runs:
             """
             return first_number - second_number
         ```
-        '
-        echo "codebase='$CODEBASE'" >> $GITHUB_OUTPUT
+        '" >> $GITHUB_OUTPUT
       shell: bash
 
     - id: read_issue
