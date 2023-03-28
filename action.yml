@@ -4,7 +4,14 @@ description: 'Submits PRs to fix issues'
 inputs:
   gh_token:
     description: 'your GH token'
-    requited: true
+    required: true
+  openai_token:
+    description: 'your OpenAI token'
+    required: true
+  model_name:
+    description: 'which OpenAI GPT model to use'
+    required: true
+    default: 'gpt-4'
   issue_number:
     description: 'id of the issue to submit a PR for'
     required: true
@@ -44,6 +51,15 @@ runs:
         ' >> changes.patch
       shell: bash
 
+    - id: setup_python
+      uses: actions/setup-python@v4 
+      with:
+        python-version: '3.11' 
+
+    - id: run_script
+      run: echo "script_output=$(python convert_issue_to_pr.py) >> $GITHUB_OUTPUT
+      shell: bash
+
     - id: apply_patch
       run: |
         git checkout -b fix/${{ inputs.issue_number }}
@@ -65,5 +81,5 @@ runs:
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         gh pr create \
           --title "fix: $title (#${{ inputs.issue_number }})" \
-          --body "Fixes #${{ inputs.issue_number }}<hr>_Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
+          --body "Fixes #${{ inputs.issue_number }}<hr>${{ steps.run_script.outputs.script_output }} _Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
       shell: bash
