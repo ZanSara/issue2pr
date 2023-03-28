@@ -1,6 +1,5 @@
 import sys
 import json
-import argparse
 import openai
 
 
@@ -18,11 +17,5 @@ def issue_to_pr(issue_content):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-k','--openai-api-key', required=True)
-    parser.add_argument('-c','--issue-content', required=True)
-    args = vars(parser.parse_args())
-
-    openai.api_key = args["issue_content"]
-
-    print(issue_to_pr(issue_content=args["issue_content"]))
+    openai.api_key = sys.argv[1]
+    print(issue_to_pr(issue_content=sys.argv[2])
