@@ -27,21 +27,6 @@ runs:
     - id: checkout
       uses: actions/checkout@v3
 
-    - id: load_codebase
-      run: |
-        echo "codebase='
-        test-issue2pr/test/function_to_fix.py
-        
-        ```
-        def add_numbers_together(first_number: int, second_number: int):
-            """
-            Adds two numbers together
-            """
-            return first_number - second_number
-        ```
-        '" >> $GITHUB_OUTPUT
-      shell: bash
-
     - id: read_issue
       run: |
         echo "issue-data=$(gh issue view ${{ inputs.issue_number }} --json=title,body,labels)" >> $GITHUB_OUTPUT
@@ -84,7 +69,7 @@ runs:
         echo "script_output=$(python convert_issue_to_pr.py \
             ${{ inputs.openai_api_key }} \
             '${{ steps.read_issue.outputs.issue-data }}' \
-            ${{ steps.load_codebase.outputs.codebase }} \ 
+            $GITHUB_WORKSPACE \ 
         )" >> $GITHUB_OUTPUT
       shell: bash
 

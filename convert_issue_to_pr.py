@@ -6,6 +6,13 @@ import openai
 def issue_to_pr(codebase, issue_content):
     issue_data = json.loads(issue_content)
 
+    codebase_content = ""
+    for file_to_load in os.listdir(codebase):
+        if os.isfile(file_to_load):
+            codebase_content += codebase + "/" + file_to_load + ":\n\n"
+            with open(codebase + "/" + file_to_load, 'r') as code_file:
+                codebase_content += f"```\n{code_file.read()}\n```\n\n"
+
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[
@@ -20,7 +27,7 @@ def issue_to_pr(codebase, issue_content):
             },
             {
                 "role": "user", 
-                "content": f"CODEBASE:\n\n{codebase}\n\nISSUE:\n\n{issue_data}\n\nPATCH:"
+                "content": f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}\n\nPATCH:"
             }
         ]
     )
