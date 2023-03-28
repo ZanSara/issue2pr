@@ -1,20 +1,27 @@
 import sys
+import json
 import openai
 
-openai.api_key = sys.argv[1]
 
+def issue_to_pr(issue_content):
+    issue_data = json.loads(issue_content)
 
-def issue_to_pr():
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"},
-            {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-            {"role": "user", "content": "Where was it played?"}
+            {"role": "system", "content": "You are a helpful assistant. "},
+            {"role": "user", "content": "How do people greet each other in French?"},
         ]
     )
-    return response
+    return response["choices"][0]["message"]["content"])
+
 
 if __name__ == "__main__":
-    print(issue_to_pr()["choices"][0]["message"]["content"])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-k','--openai-api-key', required=True)
+    parser.add_argument('-c','--issue-content', required=True)
+    args = vars(parser.parse_args())
+
+    openai.api_key = args["issue_content"]
+
+    print(issue_to_pr(issue_content=args["issue_content"])
