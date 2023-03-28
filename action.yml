@@ -78,11 +78,10 @@ runs:
               $GITHUB_WORKSPACE \ 
           )" >> changes.patch
 
-          if git apply --ignore-space-change --ignore-whitespace changes.patch ; then            
+          FEEDBACK=$(git apply --ignore-space-change --ignore-whitespace changes.patch)
+          if $FEEDBACK; then            
               rm changes.patch
               break
-          else
-              FEEDBACK="Patch failed, try again!"
           fi
         done
         git branch -d fix/${{ inputs.issue_number }}
