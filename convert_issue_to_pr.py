@@ -4,7 +4,7 @@ import json
 import openai
 
 
-def issue_to_pr(codebase, fedback, issue_content):
+def issue_to_pr(codebase, feedback, issue_content):
     issue_data = json.loads(issue_content)
 
     codebase_content = ""
