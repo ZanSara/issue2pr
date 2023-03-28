@@ -4,7 +4,7 @@ import json
 import openai
 
 
-def issue_to_pr(codebase, issue_content):
+def issue_to_pr(codebase, fedback, issue_content):
     issue_data = json.loads(issue_content)
 
     codebase_content = ""
@@ -28,7 +28,7 @@ def issue_to_pr(codebase, issue_content):
             },
             {
                 "role": "user", 
-                "content": f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}\n\nPATCH:"
+                "content": f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}\n\nFEEDBACK:{feedback}\n\nPATCH:"
             }
         ]
     )
@@ -39,4 +39,4 @@ def issue_to_pr(codebase, issue_content):
 
 if __name__ == "__main__":
     openai.api_key = sys.argv[1]
-    print(issue_to_pr(issue_content=sys.argv[2], codebase=sys.argv[3]))
+    print(issue_to_pr(issue_content=sys.argv[2], feedback=sys.argv[3], codebase=sys.argv[4]))
