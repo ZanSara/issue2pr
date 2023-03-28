@@ -74,7 +74,7 @@ runs:
           echo "script_output=$(python convert_issue_to_pr.py \
               ${{ inputs.openai_api_key }} \
               '${{ steps.read_issue.outputs.issue-data }}' \
-              $FEEDBACK \
+              "$FEEDBACK" \
               $GITHUB_WORKSPACE \ 
           )" >> changes.patch
 
