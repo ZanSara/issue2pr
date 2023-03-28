@@ -80,7 +80,7 @@ runs:
           )" >> changes.patch
           cat changes.patch
      
-          ERROR=$(git apply --ignore-space-change --ignore-whitespace changes.patch 2>&1 >/d>
+          ERROR=$(git apply --ignore-space-change --ignore-whitespace changes.patch 2>&1 >/dev/null)
           if $ERROR; then
               FEEDBACK=$ERROR
           else
