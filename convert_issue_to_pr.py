@@ -18,4 +18,4 @@ def issue_to_pr(issue_content):
 
 if __name__ == "__main__":
     openai.api_key = sys.argv[1]
-    print(issue_to_pr(issue_content=sys.argv[2])
+    print(issue_to_pr(issue_content=sys.argv[2]))
