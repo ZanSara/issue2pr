@@ -21,9 +21,6 @@ outputs:
     description: "number of the PR opened"
     value: ${{ steps.open-pr.pr-number }}
 
-env:
-  OPENAI_API_KEY: ${{ inputs.openai_api_key }}
-
 runs:
   using: "composite"
   steps:
@@ -61,13 +58,14 @@ runs:
 
     - id: setup_deps
       run: pip install openai
+      shell: bash
 
     - id: get_script
       run: wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
       shell: bash
 
     - id: run_script
-      run: echo "script_output=$(python convert_issue_to_pr.py)" >> $GITHUB_OUTPUT
+      run: echo "script_output=$(python convert_issue_to_pr.py ${{ inputs.openai_api_key }})" >> $GITHUB_OUTPUT
       shell: bash
 
     - id: apply_patch

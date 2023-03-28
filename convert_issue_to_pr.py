@@ -1,8 +1,7 @@
-
-# Note: you need to be using OpenAI Python v0.27.0 for the code below to work
+import sys
 import openai
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = sys.argv[1]
 
 
 def issue_to_pr():
