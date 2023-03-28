@@ -13,7 +13,9 @@ def issue_to_pr(issue_content):
             {"role": "user", "content": "How do people greet each other in French?"},
         ]
     )
-    return response["choices"][0]["message"]["content"]
+    reply = response["choices"][0]["message"]["content"]
+    reply = reply.replace('"', "\"")  # Bash
+    return reply
 
 
 if __name__ == "__main__":
