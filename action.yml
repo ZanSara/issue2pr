@@ -40,7 +40,7 @@ runs:
             return first_number - second_number
         ```
         '
-        echo "codebase=$CODEBASE" >> $GITHUB_OUTPUT
+        echo "codebase='$CODEBASE'" >> $GITHUB_OUTPUT
       shell: bash
 
     - id: read_issue
