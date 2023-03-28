@@ -56,6 +56,10 @@ runs:
       with:
         python-version: '3.11' 
 
+    - id: get_script
+      run: wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
+      shell: bash
+
     - id: run_script
       run: echo "script_output=$(python convert_issue_to_pr.py)" >> $GITHUB_OUTPUT
       shell: bash
@@ -81,5 +85,5 @@ runs:
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         gh pr create \
           --title "fix: $title (#${{ inputs.issue_number }})" \
-          --body "Fixes #${{ inputs.issue_number }}<hr>${{ steps.run_script.outputs.script_output }} _Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
+          --body "Fixes #${{ inputs.issue_number }}<hr>${{ steps.run_script.outputs.script_output }}<hr> _Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
       shell: bash
