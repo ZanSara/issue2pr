@@ -37,19 +37,19 @@ runs:
         gh issue comment ${{ inputs.issue_number }} --body ":sparkles: Issue2PR is taking care of this issue. Hold on... :sparkles:"
       shell: bash
 
-    - id: create_patch
-      run: |
-        echo '
-        --- test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
-        +++ test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
-        @@ -4,4 +4,4 @@
-             """
-             Adds two numbers together
-             """
-        -    return first_number - second_number
-        +    return first_number + second_number
-        ' >> changes.patch
-      shell: bash
+    # - id: create_patch
+    #   run: |
+    #     echo '
+    #     --- test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
+    #     +++ test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
+    #     @@ -4,4 +4,4 @@
+    #          """
+    #          Adds two numbers together
+    #          """
+    #     -    return first_number - second_number
+    #     +    return first_number + second_number
+    #     ' >> changes.patch
+    #   shell: bash
 
     - id: setup_python
       uses: actions/setup-python@v4 
@@ -70,7 +70,7 @@ runs:
             ${{ inputs.openai_api_key }} \
             '${{ steps.read_issue.outputs.issue-data }}' \
             $GITHUB_WORKSPACE \ 
-        )" >> $GITHUB_OUTPUT
+        )" >> changes.patch
       shell: bash
 
     - id: apply_patch
