@@ -65,7 +65,7 @@ runs:
       shell: bash
 
     - id: run_script
-      run: echo "script_output=$(python convert_issue_to_pr.py ${{ inputs.openai_api_key }}) '${{ steps.read_issue.outputs.issue-data }}'" >> $GITHUB_OUTPUT
+      run: echo "script_output=$(python convert_issue_to_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}')" >> $GITHUB_OUTPUT
       shell: bash
 
     - id: apply_patch
