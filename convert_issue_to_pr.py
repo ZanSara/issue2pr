@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 import openai
@@ -8,7 +9,7 @@ def issue_to_pr(codebase, issue_content):
 
     codebase_content = ""
     for file_to_load in os.listdir(codebase):
-        if os.isfile(file_to_load):
+        if os.path.isfile(file_to_load):
             codebase_content += codebase + "/" + file_to_load + ":\n\n"
             with open(codebase + "/" + file_to_load, 'r') as code_file:
                 codebase_content += f"```\n{code_file.read()}\n```\n\n"
