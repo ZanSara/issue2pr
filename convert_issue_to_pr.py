@@ -1,5 +1,6 @@
 import sys
 import json
+import argparse
 import openai
 
 
@@ -9,11 +10,11 @@ def issue_to_pr(issue_content):
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[
-            {"role": "system", "content": "You are a helpful assistant. "},
+            {"role": "system", "content": "You are a helpful assistant. Provide a very concise answer."},
             {"role": "user", "content": "How do people greet each other in French?"},
         ]
     )
-    return response["choices"][0]["message"]["content"])
+    return response["choices"][0]["message"]["content"]
 
 
 if __name__ == "__main__":
@@ -24,4 +25,4 @@ if __name__ == "__main__":
 
     openai.api_key = args["issue_content"]
 
-    print(issue_to_pr(issue_content=args["issue_content"])
+    print(issue_to_pr(issue_content=args["issue_content"]))
