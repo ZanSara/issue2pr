@@ -64,20 +64,26 @@ runs:
       run: wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
       shell: bash
 
-    - id: run_script
-      run: |
-        echo "script_output=$(python convert_issue_to_pr.py \
-            ${{ inputs.openai_api_key }} \
-            '${{ steps.read_issue.outputs.issue-data }}' \
-            $GITHUB_WORKSPACE \ 
-        )" >> changes.patch
-      shell: bash
-
-    - id: apply_patch
+    - id: patch
       run: |
         git checkout -b fix/${{ inputs.issue_number }}
-        git apply --ignore-space-change --ignore-whitespace changes.patch
-        rm changes.patch
+        loops=0
+        while [ $loops -le 10 ]
+        do
+          echo "script_output=$(python convert_issue_to_pr.py \
+              ${{ inputs.openai_api_key }} \
+              '${{ steps.read_issue.outputs.issue-data }}' \
+              $GITHUB_WORKSPACE \ 
+          )" >> changes.patch
+
+          if git apply --ignore-space-change --ignore-whitespace changes.patch ; then            
+            rm changes.patch
+            break
+          else
+              echo "Patch failed, trying again..."
+          fi
+        done
+        git branch -d fix/${{ inputs.issue_number }}
       shell: bash
 
     - id: push_changes
