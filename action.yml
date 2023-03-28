@@ -57,7 +57,7 @@ runs:
         python-version: '3.11' 
 
     - id: run_script
-      run: echo "script_output=$(python convert_issue_to_pr.py) >> $GITHUB_OUTPUT
+      run: echo "script_output=$(python convert_issue_to_pr.py)" >> $GITHUB_OUTPUT
       shell: bash
 
     - id: apply_patch
