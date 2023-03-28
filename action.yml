@@ -5,13 +5,13 @@ inputs:
   gh_token:
     description: 'your GH token'
     required: true
-  openai_token:
-    description: 'your OpenAI token'
+  openai_api_key:
+    description: 'your OpenAI API key'
     required: true
   model_name:
     description: 'which OpenAI GPT model to use'
     required: true
-    default: 'gpt-4'
+    default: 'gpt-3.5-turbo'
   issue_number:
     description: 'id of the issue to submit a PR for'
     required: true
@@ -20,6 +20,9 @@ outputs:
   pr-number:
     description: "number of the PR opened"
     value: ${{ steps.open-pr.pr-number }}
+
+env:
+  OPENAI_API_KEY: ${{ inputs.openai_api_key }}
 
 runs:
   using: "composite"
@@ -55,6 +58,9 @@ runs:
       uses: actions/setup-python@v4 
       with:
         python-version: '3.11' 
+
+    - id: setup_deps
+      run: pip install openai
 
     - id: get_script
       run: wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
