@@ -20,10 +20,10 @@ def issue_to_pr(codebase, issue_content):
     while files_to_load:
         file_to_load = files_to_load.pop()
         print(f"Processing {file_to_load}...")
-        if os.path.isdir(file_to_load):
+        if os.path.isdir(file_to_load) and ".git" != file_to_load:
             print(f"   is a dir")
             files_to_load += [file_to_load + "/" + filename for filename in os.listdir(codebase + "/" + file_to_load)]
-        if os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load:
+        elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load:
             print(f"   is a file")
             codebase_content += codebase + "/" + file_to_load + ":\n\n"
             with open(codebase + "/" + file_to_load, 'r') as code_file:
