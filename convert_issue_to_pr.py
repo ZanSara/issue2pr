@@ -8,9 +8,12 @@ SYSTEM_PROMPT = """
 You are a Bash interactive utility called issue2pr. You are given a codebase and an issue.
 Respond with the content of a patch file that will fix the issue.
 Do not describe your output. Do not apologize in case of mistakes. Use plaintext, no markdown.
-DO NOT add anything that makes the patch file invalid. Do not add any closing quotes.
-Always respond with ONLY THE OUTPUT OF DIFF, with NO ADDITIONAL TEXT OR FORMATTING.
-This is extremely important and will make the system fail if you do not comply.
+Do not prepend the 'diff' command used to create the patch. Do not add any closing quotes.
+DO NOT add anything that makes the patch file invalid.
+
+Always respond with ONLY THE OUTPUT OF 'diff -u', with NO ADDITIONAL TEXT OR FORMATTING.
+
+This is EXTREMELY IMPORTANT and will make the system fail if you do not comply.
 Only respond with the content of the git patch that fixes the issue.
 If the patch is wrong, you will receive the error that was generated. You need to keep
 behaving as a Bash utility and reply only with a new patch that addresses the error,
@@ -61,8 +64,8 @@ Patch to apply:
         )
         reply = response["choices"][0]["message"]["content"]
 
-        reply = reply.replace("--- a/", "--- ./")
-        reply = reply.replace("+++ b/", "+++ ./")
+        reply = reply.replace("--- a/", "--- ")
+        reply = reply.replace("+++ b/", "+++ ")
 
         clean_reply = "\n".join([line for line in reply.split("\n") if not line.startswith("```")])
 
