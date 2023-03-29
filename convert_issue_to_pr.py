@@ -12,7 +12,9 @@ Always output **ONLY THE PATCH**, with **NO ADDITIONAL TEXT**.
 This is extremely important and will make the system fail if you do not comply.
 Only output the git patch that fixes the issue.
 The output will be piped directly to a file and applied to the repository 
-so make sure the syntax is fully valid.
+so make sure the syntax is fully valid. If the patch is wrong, you will receive
+the error that was generated and you should output a new patch that addresses the
+error.
 """
 
 
@@ -27,7 +29,7 @@ def issue_to_pr(codebase, issue_content):
         if os.path.isdir(file_to_load) and ".git" != file_to_load:
             print(f"   is a dir")
             files_to_load += [file_to_load + "/" + filename for filename in os.listdir(codebase + "/" + file_to_load)]
-        elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load:
+        elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load and not "explain_pr.py" in file_to_load:
             print(f"   is a file")
             codebase_content += codebase + "/" + file_to_load + ":\n\n"
             with open(codebase + "/" + file_to_load, 'r') as code_file:
@@ -58,7 +60,7 @@ def issue_to_pr(codebase, issue_content):
             break
         except:
             messages.append({"role": "assistant", "content": reply})
-            messages.append({"role": "user", "content": "The patch did not fix the issue or was invalid. Please try again."})
+            messages.append({"role": "user", "content": "error: the patch is invalid."})
 
         print("FAILED!")
 
