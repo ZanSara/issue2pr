@@ -5,7 +5,7 @@ import subprocess
 import openai
 
 SYSTEM_PROMPT = """
-You are given a codebase and an issue.
+You are a Bash interactive utility called issue2pr. You are given a codebase and an issue.
 Respond with the content of a patch file that will fix the issue.
 Do not describe your output. Do not apologize in case of mistakes. 
 DO NOT use markdown or add anything that makes the patch file invalid.
@@ -13,8 +13,7 @@ Always respond with ONLY THE OUTPUT OF DIFF, with NO ADDITIONAL TEXT OR FORMATTI
 This is extremely important and will make the system fail if you do not comply.
 Only respond with the content of the git patch that fixes the issue.
 If the patch is wrong, you will receive the error that was generated and you 
-should output a new patch that addresses the error.
-"""
+should output a new patch that addresses the error."""
 
 
 def issue_to_pr(codebase, issue_content):
@@ -32,11 +31,24 @@ def issue_to_pr(codebase, issue_content):
         
         elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load and not "explain_pr.py" in file_to_load:
             print(f"   is a file")
-            codebase_content += "FILE: " + codebase + "/" + file_to_load + ":\n\n"
+            codebase_content += "Another file? Y\nAdd a file:" + codebase + "/" + file_to_load + ":\n\n"
             with open(codebase + "/" + file_to_load, 'r') as code_file:
-                codebase_content += f"{code_file.read()}\n\n\n"
+                codebase_content += f"{code_file.read()}\n\n"
 
-    prompt = f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}"
+    prompt = f"""
+> issue2pr
+Add a file:
+{codebase_content}
+
+Another file? N
+Describe the issue:
+{issue_data["title"]}
+{issue_data["body"]}
+
+Solving your issue...
+Patch to apply:
+
+"""
     print("\n#---------#\n"+prompt+"\n#---------#\n")
     
     messages = [
