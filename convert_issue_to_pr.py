@@ -33,6 +33,7 @@ def issue_to_pr(codebase, issue_content):
             ]
         )
         reply = response["choices"][0]["message"]["content"]
+        print(reply)
         
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply)
