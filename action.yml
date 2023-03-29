@@ -29,8 +29,7 @@ runs:
 
     - id: read_issue
       run: |
-        ISSUE_DATA=$(gh issue view ${{ inputs.issue_number }} --json=title,body,labels)
-        ISSUE_DATA=sed "s/'/\'/g" $ISSUE_DATA
+        ISSUE_DATA=$(gh issue view ${{ inputs.issue_number }} --json=title,body,labels | sed "s/'/\'/g")
         echo "issue-data=$ISSUE_DATA" >> $GITHUB_OUTPUT
       shell: bash
 
