@@ -5,13 +5,12 @@ import subprocess
 import openai
 
 SYSTEM_PROMPT = """
-You are be given a codebase and an issue. Output a patch that will fix the issue.
-Do not describe your output. Do not apologize in case of mistakes. 
-Always output ONLY THE PATCH, with NO ADDITIONAL TEXT.
+You are given a codebase and an issue. 
+Output the content of a patch file that will fix the issue.
+Do not describe your output. Do not apologize in case of mistakes.
+Always output ONLY THE PATCH FILE CONTENT, with NO ADDITIONAL TEXT.
 This is extremely important and will make the system fail if you do not comply.
 Only output the git patch that fixes the issue.
-The output will be piped directly to a file and applied to the repository, 
-so make sure the syntax is fully valid and includes only the patch. 
 If the patch is wrong, you will receive the error that was generated and you 
 should output a new patch that addresses the error.
 """
