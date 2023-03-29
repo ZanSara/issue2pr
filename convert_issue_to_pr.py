@@ -69,7 +69,7 @@ Patch to apply:
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply + "\n")
 
-        apply_patch="patch -i changes.patch"
+        apply_patch="cd .. & patch -i changes.patch"
         try:
             apply_command = subprocess.run(apply_patch, shell=True, check=True)
             break

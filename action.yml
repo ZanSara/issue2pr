@@ -50,7 +50,6 @@ runs:
     - id: patch
       run: |
         pwd
-        cd ..
         wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
         python convert_issue_to_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}' $GITHUB_WORKSPACE
       shell: bash
