@@ -64,17 +64,18 @@ Patch to apply:
         )
         reply = response["choices"][0]["message"]["content"]
 
+        print("\n---------\n"+reply+"\n---------\n")
+
         reply = reply.replace("--- a/", "--- /home/runner/work/test-issue2pr/test-issue2pr/")
         reply = reply.replace("+++ b/", "+++ /home/runner/work/test-issue2pr/test-issue2pr/")
 
         clean_reply = "\n".join([line for line in reply.split("\n") if not line.startswith("```") and not line.startswith("diff -u")])
 
-        print("\n---------\n"+reply+"\n---------\n")
         
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply + "\n")
 
-        apply_patch="cd .. & patch -i changes.patch"
+        apply_patch="cd / & patch -i changes.patch"
         try:
             apply_command = subprocess.run(apply_patch, shell=True, check=True)
             break
