@@ -19,9 +19,12 @@ def issue_to_pr(codebase, issue_content):
     files_to_load = os.listdir(codebase)
     while files_to_load:
         file_to_load = files_to_load.pop()
+        print(f"Processing {file_to_load}...")
         if os.path.isdir(file_to_load):
-            files_to_load += [file_to_load + "/" + filename for filename in os.listdir(codebase)]
+            print(f"   is a dir")
+            files_to_load += [file_to_load + "/" + filename for filename in os.listdir(codebase + "/" + file_to_load)]
         if os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load:
+            print(f"   is a file")
             codebase_content += codebase + "/" + file_to_load + ":\n\n"
             with open(codebase + "/" + file_to_load, 'r') as code_file:
                 codebase_content += f"```\n{code_file.read()}\n```\n\n"
@@ -29,13 +32,14 @@ def issue_to_pr(codebase, issue_content):
     prompt = f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}\n\nPATCH:"
     print("\n#---------#\n"+prompt+"\n#---------#\n")
     
-    for i in range(5):
+    messages = [
+        {"role": "system",  "content": SYSTEM_PROMPT},
+        {"role": "user", "content": prompt}
+    ]
+    for i in range(3):
         response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[
-                {"role": "system",  "content": SYSTEM_PROMPT},
-                {"role": "user", "content": prompt}
-            ]
+        messages=messages
         )
         reply = response["choices"][0]["message"]["content"]
 
@@ -49,7 +53,8 @@ def issue_to_pr(codebase, issue_content):
             apply_command = subprocess.run(apply_patch, shell=True, check=True)
             break
         except:
-            pass
+            messages.append({"role": "assistant", "content": reply})
+            messages.append({"role": "user", "content": "The patch did not fix the issue or was invalid. Please try again."})
         print("FAILED!")
 
     reply = reply.replace('"', "\"")  # Bash
