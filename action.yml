@@ -71,6 +71,8 @@ runs:
               ${{ inputs.openai_api_key }} \
               '${{ steps.read_issue.outputs.issue-data }}' \
               $GITHUB_WORKSPACE
+        rm changes.patch
+        rm convert_issue_to_pr.py
       shell: bash
 
     - id: push_changes

@@ -23,8 +23,9 @@ def issue_to_pr(codebase, issue_content):
                 codebase_content += f"```\n{code_file.read()}\n```\n\n"
 
     prompt = f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}\n\nPATCH:"
-
-    for i in range(10):
+    print("\n#---------#\n"+prompt"\n#---------#\n")
+    
+    for i in range(5):
         response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -33,7 +34,8 @@ def issue_to_pr(codebase, issue_content):
             ]
         )
         reply = response["choices"][0]["message"]["content"]
-        print(reply)
+
+        print("\n---------\n"+reply"\n---------\n")
         
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply)
