@@ -64,8 +64,8 @@ Patch to apply:
         )
         reply = response["choices"][0]["message"]["content"]
 
-        reply = reply.replace("--- a/", "--- /home/runner/work/test-issue2pr/")
-        reply = reply.replace("+++ b/", "+++ /home/runner/work/test-issue2pr/")
+        reply = reply.replace("--- a/", "--- /home/runner/work/test-issue2pr/test-issue2pr/")
+        reply = reply.replace("+++ b/", "+++ /home/runner/work/test-issue2pr/test-issue2pr/")
 
         clean_reply = "\n".join([line for line in reply.split("\n") if not line.startswith("```") and not line.startswith("diff -u")])
 
