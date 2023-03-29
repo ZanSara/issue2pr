@@ -37,20 +37,6 @@ runs:
         gh issue comment ${{ inputs.issue_number }} --body ":sparkles: Issue2PR is taking care of this issue. Hold on... :sparkles:"
       shell: bash
 
-    # - id: create_patch
-    #   run: |
-    #     echo '
-    #     --- test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:32.631872193 +0200
-    #     +++ test-issue2pr/test/function_to_fix.py	2023-03-27 23:48:49.243625357 +0200
-    #     @@ -4,4 +4,4 @@
-    #          """
-    #          Adds two numbers together
-    #          """
-    #     -    return first_number - second_number
-    #     +    return first_number + second_number
-    #     ' >> changes.patch
-    #   shell: bash
-
     - id: setup_python
       uses: actions/setup-python@v4 
       with:
@@ -89,5 +75,5 @@ runs:
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         gh pr create \
           --title "fix: $title (#${{ inputs.issue_number }})" \
-          --body "Fixes #${{ inputs.issue_number }}<hr>${{ steps.run_script.outputs.script_output }}<hr> _Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
+          --body "Fixes #${{ inputs.issue_number }}_Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
       shell: bash
