@@ -31,7 +31,7 @@ def issue_to_pr(codebase, issue_content):
         
         if os.path.isdir(file_to_load) and ".git" != file_to_load:
             print(f"   is a dir")
-            files_to_load += [file_to_load + "/" + filename for filename in os.listdir(codebase + "/" + file_to_load)]
+            files_to_load += [filename for filename in os.listdir(codebase + "/" + file_to_load)]
         
         elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load and not "explain_pr.py" in file_to_load:
             print(f"   is a file")
@@ -64,8 +64,8 @@ Patch to apply:
         )
         reply = response["choices"][0]["message"]["content"]
 
-        reply = reply.replace("--- a/", "--- ")
-        reply = reply.replace("+++ b/", "+++ ")
+        reply = reply.replace("--- a/", "--- /home/runner/work/test-issue2pr/")
+        reply = reply.replace("+++ b/", "+++ /home/runner/work/test-issue2pr/")
 
         clean_reply = "\n".join([line for line in reply.split("\n") if not line.startswith("```")])
 
