@@ -5,11 +5,14 @@ import subprocess
 import openai
 
 SYSTEM_PROMPT = """
-Pretend you are a bash utility. You will be given on your stdin a codebase and an issue. 
-You should output a patch that will fix the issue.
-Do not describe your output. Only output the git patch that fixes the issue. 
-The output will be piped directly to a file and applied to the repository, 
-so make sure the syntax is valid.
+Pretend you are a command line utility. You will be given a codebase and an issue. 
+Output a patch that will fix the issue.
+Do not describe your output. Do not apologize in case of mistakes. 
+Always output **ONLY THE PATCH**, with **NO ADDITIONAL TEXT**. 
+This is extremely important and will make the system fail if you do not comply.
+Only output the git patch that fixes the issue.
+The output will be piped directly to a file and applied to the repository 
+so make sure the syntax is fully valid.
 """
 
 
@@ -56,6 +59,7 @@ def issue_to_pr(codebase, issue_content):
         except:
             messages.append({"role": "assistant", "content": reply})
             messages.append({"role": "user", "content": "The patch did not fix the issue or was invalid. Please try again."})
+
         print("FAILED!")
 
     reply = reply.replace('"', "\"")  # Bash
