@@ -61,6 +61,9 @@ Patch to apply:
         )
         reply = response["choices"][0]["message"]["content"]
 
+        reply = reply.replace("--- a/", "--- ")
+        reply = reply.replace("+++ b/", "+++ ")
+
         print("\n---------\n"+reply+"\n---------\n")
         
         with open("changes.patch", "w") as patch_file:
@@ -73,7 +76,7 @@ Patch to apply:
         except:
             pass
             messages.append({"role": "assistant", "content": reply})
-            messages.append({"role": "user", "content": "git: the patch is invalid."})
+            messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
 
         print("FAILED!")
 
