@@ -7,8 +7,7 @@ import openai
 SYSTEM_PROMPT = """
 You are be given a codebase and an issue. Output a patch that will fix the issue.
 Do not describe your output. Do not apologize in case of mistakes. 
-Always output **ONLY THE PATCH**, with **NO ADDITIONAL TEXT**: no bash commands,
-no Markdown, no titles, no explanations. Produce strictly only the git patch.
+Always output ONLY THE PATCH, with NO ADDITIONAL TEXT.
 This is extremely important and will make the system fail if you do not comply.
 Only output the git patch that fixes the issue.
 The output will be piped directly to a file and applied to the repository, 
@@ -26,14 +25,16 @@ def issue_to_pr(codebase, issue_content):
     while files_to_load:
         file_to_load = files_to_load.pop()
         print(f"Processing {file_to_load}...")
+        
         if os.path.isdir(file_to_load) and ".git" != file_to_load:
             print(f"   is a dir")
             files_to_load += [file_to_load + "/" + filename for filename in os.listdir(codebase + "/" + file_to_load)]
+        
         elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load and not "explain_pr.py" in file_to_load:
             print(f"   is a file")
-            codebase_content += codebase + "/" + file_to_load + ":\n\n"
+            codebase_content += "FILE: " + codebase + "/" + file_to_load + ":\n\n"
             with open(codebase + "/" + file_to_load, 'r') as code_file:
-                codebase_content += f"```\n{code_file.read()}\n```\n\n"
+                codebase_content += f"{code_file.read()}\n\n\n"
 
     prompt = f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}"
     print("\n#---------#\n"+prompt+"\n#---------#\n")
