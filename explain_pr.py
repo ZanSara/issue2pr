@@ -22,7 +22,7 @@ def explain_pr(issue_content, patch_path="changes.patch"):
     with open(patch_path, 'r') as patch_file:
         patch = patch_file.read()
 
-    prompt = f"ISSUE:\n\n{issue_data}\n\nPATCH:{patch}\n\nEXPLANATION:"
+    prompt = f"ISSUE:\n\n{issue_data}\n\nPATCH:{patch}"
     print("\n#---------#\n"+prompt+"\n#---------#\n")
     
     messages = [

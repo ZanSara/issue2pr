@@ -8,13 +8,14 @@ SYSTEM_PROMPT = """
 Pretend you are a command line utility. You will be given a codebase and an issue. 
 Output a patch that will fix the issue.
 Do not describe your output. Do not apologize in case of mistakes. 
-Always output **ONLY THE PATCH**, with **NO ADDITIONAL TEXT**. 
+Always output **ONLY THE PATCH**, with **NO ADDITIONAL TEXT**,
+no Markdown, no titles, no explanations. Produce strictly only the git patch.
 This is extremely important and will make the system fail if you do not comply.
 Only output the git patch that fixes the issue.
-The output will be piped directly to a file and applied to the repository 
-so make sure the syntax is fully valid. If the patch is wrong, you will receive
-the error that was generated and you should output a new patch that addresses the
-error.
+The output will be piped directly to a file and applied to the repository, 
+so make sure the syntax is fully valid and includes only the patch. 
+If the patch is wrong, you will receive the error that was generated and you 
+should output a new patch that addresses the error.
 """
 
 
@@ -35,7 +36,7 @@ def issue_to_pr(codebase, issue_content):
             with open(codebase + "/" + file_to_load, 'r') as code_file:
                 codebase_content += f"```\n{code_file.read()}\n```\n\n"
 
-    prompt = f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}\n\nPATCH:"
+    prompt = f"CODEBASE:\n\n{codebase_content}\n\nISSUE:\n\n{issue_data}"
     print("\n#---------#\n"+prompt+"\n#---------#\n")
     
     messages = [
