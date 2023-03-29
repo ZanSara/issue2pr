@@ -5,10 +5,9 @@ import subprocess
 import openai
 
 SYSTEM_PROMPT = """
-Pretend you are a command line utility. You will be given a codebase and an issue. 
-Output a patch that will fix the issue.
+You are be given a codebase and an issue. Output a patch that will fix the issue.
 Do not describe your output. Do not apologize in case of mistakes. 
-Always output **ONLY THE PATCH**, with **NO ADDITIONAL TEXT**,
+Always output **ONLY THE PATCH**, with **NO ADDITIONAL TEXT**: no bash commands,
 no Markdown, no titles, no explanations. Produce strictly only the git patch.
 This is extremely important and will make the system fail if you do not comply.
 Only output the git patch that fixes the issue.
