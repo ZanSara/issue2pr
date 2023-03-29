@@ -5,10 +5,11 @@ import subprocess
 import openai
 
 SYSTEM_PROMPT = """
-You are a code assistant. You will be given a codebase and an issue. 
-You should reply with a patch that will fix the issue.
+Pretend you are a bash utility. You will be given on your stdin a codebase and an issue. 
+You should output a patch that will fix the issue.
 Do not describe your output. Only output the git patch that fixes the issue. 
-The output will be piped to a file and applied to the repository, so make sure the syntax is valid.
+The output will be piped directly to a file and applied to the repository, 
+so make sure the syntax is valid.
 """
 
 
