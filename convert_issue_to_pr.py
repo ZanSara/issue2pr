@@ -20,7 +20,7 @@ def issue_to_pr(codebase, issue_content):
     for file_to_load in files_to_load:
         if os.path.isdir(file_to_load):
             files_to_load += [file_to_load + "/" + filename for filename in os.listdir(codebase)]
-        if os.path.isfile(file_to_load):
+        if os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load:
             codebase_content += codebase + "/" + file_to_load + ":\n\n"
             with open(codebase + "/" + file_to_load, 'r') as code_file:
                 codebase_content += f"```\n{code_file.read()}\n```\n\n"
