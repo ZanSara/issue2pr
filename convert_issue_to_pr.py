@@ -64,6 +64,8 @@ Patch to apply:
         reply = reply.replace("--- a/", "--- ./")
         reply = reply.replace("+++ b/", "+++ ./")
 
+        clean_reply = "\n".join([line for line in reply.split("\n") if not line.startswith("```")])
+
         print("\n---------\n"+reply+"\n---------\n")
         
         with open("changes.patch", "w") as patch_file:
