@@ -70,7 +70,7 @@ runs:
         python convert_issue_to_pr.py \
               ${{ inputs.openai_api_key }} \
               '${{ steps.read_issue.outputs.issue-data }}' \
-              $GITHUB_WORKSPACE)
+              $GITHUB_WORKSPACE
       shell: bash
 
     - id: push_changes
