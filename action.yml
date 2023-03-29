@@ -47,21 +47,10 @@ runs:
       run: pip install openai
       shell: bash
 
-    - id: get_scripts
-      run: |
-        wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
-        wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/explain_pr.py
-      shell: bash
-
     - id: patch
       run: |
+        wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
         python convert_issue_to_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}' $GITHUB_WORKSPACE
-      shell: bash
-
-    - id: explain
-      run: |
-        EXPLANATION=$(python explain_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}')
-        echo "pr-explanation=$EXPLANATION" >> $GITHUB_OUTPUT
       shell: bash
 
     - id: push_changes
@@ -71,11 +60,16 @@ runs:
         git config user.name "GitHub Action"
 
         rm changes.patch
-        rm convert_issue_to_pr.py
 
         git add .
         git commit -m 'fix issue ${{ inputs.issue_number }}'
         git push -u origin fix/${{ inputs.issue_number }}
+      shell: bash
+    
+    - id: explain
+      run: |
+        wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/explain_pr.py
+        python explain_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}' >> explanation.txt
       shell: bash
 
     - id: open_pr
@@ -83,5 +77,5 @@ runs:
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         gh pr create \
           --title "fix: $title (#${{ inputs.issue_number }})" \
-          --body "Fixes #${{ inputs.issue_number }}<hr>${{ steps.explain.outputs.pr-explanation }}<hr>_Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
+          --body "Fixes #${{ inputs.issue_number }}<hr>$(cat explanation.txt)<hr>_Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
       shell: bash
