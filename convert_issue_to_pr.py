@@ -64,9 +64,9 @@ Patch to apply:
         print("\n---------\n"+reply+"\n---------\n")
         
         with open("changes.patch", "w") as patch_file:
-            patch_file.write(reply)
+            patch_file.write(reply + "\n")
 
-        apply_patch="git apply --reject --ignore-space-change --ignore-whitespace changes.patch"
+        apply_patch="patch -i changes.patch"
         try:
             apply_command = subprocess.run(apply_patch, shell=True, check=True)
             break
