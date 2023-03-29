@@ -61,8 +61,8 @@ Patch to apply:
         )
         reply = response["choices"][0]["message"]["content"]
 
-        reply = reply.replace("--- a/", "--- ")
-        reply = reply.replace("+++ b/", "+++ ")
+        reply = reply.replace("--- a/", "--- ./")
+        reply = reply.replace("+++ b/", "+++ ./")
 
         print("\n---------\n"+reply+"\n---------\n")
         
