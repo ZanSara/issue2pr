@@ -46,25 +46,32 @@ runs:
       run: pip install openai
       shell: bash
 
-    - id: get_script
-      run: wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
+    - id: get_scripts
+      run: |
+        wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/convert_issue_to_pr.py
+        wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/explain_pr.py
       shell: bash
 
     - id: patch
       run: |
-        git checkout -b fix/${{ inputs.issue_number }}
-        python convert_issue_to_pr.py \
-              ${{ inputs.openai_api_key }} \
-              '${{ steps.read_issue.outputs.issue-data }}' \
-              $GITHUB_WORKSPACE
-        rm changes.patch
-        rm convert_issue_to_pr.py
+        python convert_issue_to_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}' $GITHUB_WORKSPACE
+      shell: bash
+
+    - id: explain
+      run: |
+        EXPLANATION=$(python explain_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}')
+        echo "pr-explanation=$EXPLANATION" >> $GITHUB_OUTPUT
       shell: bash
 
     - id: push_changes
       run: |
+        git checkout -b fix/${{ inputs.issue_number }}
         git config user.email "bot@github.com"
         git config user.name "GitHub Action"
+
+        rm changes.patch
+        rm convert_issue_to_pr.py
+
         git add .
         git commit -m 'fix issue ${{ inputs.issue_number }}'
         git push -u origin fix/${{ inputs.issue_number }}
@@ -75,5 +82,5 @@ runs:
         title=$(echo '${{ steps.read_issue.outputs.issue-data }}' | jq -r ".title")
         gh pr create \
           --title "fix: $title (#${{ inputs.issue_number }})" \
-          --body "Fixes #${{ inputs.issue_number }}_Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
+          --body "Fixes #${{ inputs.issue_number }}<hr>${{ steps.explain.outputs.pr-explanation }}<hr>_Created by [Issue2PR](https://github.com/ZanSara/issue2pr) with some AI magic :magic_wand: Please review carefully._"
       shell: bash
