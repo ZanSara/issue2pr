@@ -12,8 +12,9 @@ DO NOT add anything that makes the patch file invalid.
 Always respond with ONLY THE OUTPUT OF DIFF, with NO ADDITIONAL TEXT OR FORMATTING.
 This is extremely important and will make the system fail if you do not comply.
 Only respond with the content of the git patch that fixes the issue.
-If the patch is wrong, you will receive the error that was generated and you 
-should output a new patch that addresses the error."""
+If the patch is wrong, you will receive the error that was generated. You need to keep
+behaving as a Bash utility and reply only with a new patch that addresses the error,
+as before."""
 
 
 def issue_to_pr(codebase, issue_content):
@@ -65,13 +66,14 @@ Patch to apply:
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply)
 
-        apply_patch="git apply --ignore-space-change --ignore-whitespace changes.patch"
+        apply_patch="git apply --reject --ignore-space-change --ignore-whitespace changes.patch"
         try:
             apply_command = subprocess.run(apply_patch, shell=True, check=True)
             break
         except:
+            pass
             messages.append({"role": "assistant", "content": reply})
-            messages.append({"role": "user", "content": "error: the patch is invalid."})
+            messages.append({"role": "user", "content": "git: the patch is invalid."})
 
         print("FAILED!")
 
