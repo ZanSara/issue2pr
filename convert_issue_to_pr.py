@@ -67,11 +67,10 @@ Patch to apply:
         print("\n---------\n"+reply+"\n---------\n")
 
         reply = reply.replace("--- a/", "--- /home/runner/work/test-issue2pr/test-issue2pr/")
-        reply = reply.replace("+++ b/", "+++ /home/runner/work/test-issue2pr/test-issue2pr/")
+        reply = reply.replace("+++ b/", "+++ /home/runner/work/test-issue2pr/test-issue2pr/.tmp/")
 
         clean_reply = "\n".join([line for line in reply.split("\n") if not line.startswith("```") and not line.startswith("diff -u")])
 
-        
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply + "\n")
 
@@ -81,8 +80,8 @@ Patch to apply:
             break
         except:
             pass
-            messages.append({"role": "assistant", "content": reply})
-            messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
+            # messages.append({"role": "assistant", "content": reply})
+            # messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
 
         print("FAILED!")
 
