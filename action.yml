@@ -66,29 +66,11 @@ runs:
 
     - id: patch
       run: |
-        FEEDBACK=""
         git checkout -b fix/${{ inputs.issue_number }}
-        loops=0
-        while [ $loops -le 10 ]
-        do    
-          loops=$((loops + 1))
-          echo "script_output=$(python convert_issue_to_pr.py \
+        python convert_issue_to_pr.py \
               ${{ inputs.openai_api_key }} \
               '${{ steps.read_issue.outputs.issue-data }}' \
-              "$FEEDBACK" \
-              $GITHUB_WORKSPACE \ 
-          )" >> changes.patch
-          cat changes.patch
-     
-          ERROR=$(git apply --ignore-space-change --ignore-whitespace changes.patch 2>&1 >/dev/null)
-          if $ERROR; then
-              FEEDBACK=$ERROR
-          else
-              echo "Patch applied"
-              rm changes.patch
-              break
-          fi
-        done
+              $GITHUB_WORKSPACE)
       shell: bash
 
     - id: push_changes
