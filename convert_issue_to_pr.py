@@ -107,7 +107,7 @@ def issue_to_pr(codebase_path, issue_content):
                 os.remove(rej)
 
             print("######################")
-            print(os.path.listdir(codebase_path))
+            print(os.listdir(codebase_path))
             print("######################")
             print(exc)
             print("######################")
