@@ -18,6 +18,7 @@ Your output should look like this:
 @@ -1 +1 @@
 -this is the original content
 +this is the new content
+
 ```
 
 and NOT like this:
@@ -30,6 +31,7 @@ index 4157dda..7f0642a 100644
 @@ -1 +1 @@
 -this is the original content
 +this is the new content
+
 ```
 
 Only respond with the content of the git patch that fixes the issue.
