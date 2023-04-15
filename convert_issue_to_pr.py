@@ -104,7 +104,7 @@ def issue_to_pr(codebase_path, issue_content):
         except subprocess.CalledProcessError as exc:
 
             path = pathlib.Path(codebase_path)
-            rej_files = dir.glob(path / "*.rej")
+            rej_files = path.glob(path / "*.rej")
             for rf in rej_files:
                 rf.unlink()
             print("######################")
