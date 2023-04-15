@@ -5,7 +5,6 @@ import subprocess
 import openai
 
 SYSTEM_PROMPT = lambda issue, diff: f"""
-You are a contributor to an open source library called `math-in-python`.
 You just opened a PR to fix this issue:
 
 ```
@@ -18,13 +17,32 @@ Your PR is the following:
 {diff}
 ```
 
-Write down an explanation for the maintaners that can help them 
-understand in detail your changes and review them.
+Write the body of the PR description. It should be extremely concise 
+and contain a very brief description of what is the impact of your
+PR on the codebase's behavior.
 
-Use a professional tone. 
-Explain the PR in detail but never repeat yourself. 
+The PR description should help the maintainers
+understand in detail your changes and review them.
+It should also highlight any potentially unexpected behavior
+that your changes will cause.
+
+Use a professional tone. Never repeat yourself.
 Be as clear and concise as possible.
 You can use markdown to structure your reply.
+
+Here is an example answer for an issue about divisions by zero:
+
+```
+This PR makes the `divide` function fail with a helpful message
+when `divisor=0`, which looks like:
+
+```
+InvalidDivisorError: no number can be divided by zero.
+```
+
+Please make sure that the direct floats comparison I'm using
+does not cause floating point comparison issues.
+```
 """
 
 def explain_pr(issue_content, patch_path="changes.patch"):
