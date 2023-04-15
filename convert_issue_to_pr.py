@@ -79,28 +79,33 @@ def issue_to_pr(codebase_path, issue_content):
         {"role": "user", "content": prompt}
     ]
 
-    response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=messages
-    )
-    reply = response["choices"][0]["message"]["content"]
+    for _ in range(3):
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages
+        )
+        reply = response["choices"][0]["message"]["content"]
 
-    print("---------")
-    print(reply)
-    print("---------")
+        print("---------")
+        print(reply)
+        print("---------")
 
-    with open("changes.patch", "w") as patch_file:
-        patch_file.write(reply + "\n")
+        with open("changes.patch", "w") as patch_file:
+            patch_file.write(reply + "\n")
 
-    apply_patch="patch -p1 < changes.patch"
-    try:
-        apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
-    except subprocess.CalledProcessError as exc:
-        print(exc)
-        print(exc.stdout)
-        print(exc.stderr)
-        # messages.append({"role": "assistant", "content": reply})
-        # messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
+        apply_patch="patch -p1 < changes.patch"
+        try:
+            apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
+        except subprocess.CalledProcessError as exc:
+            print("######################")
+            print(exc)
+            print("######################")
+            print(exc.stdout)
+            print("######################")
+            print(exc.stderr)
+            print("######################")
+            messages.append({"role": "assistant", "content": reply})
+            messages.append({"role": "user", "content": exc.stderr})
 
     reply = reply.replace('"', "\"")  # Bash
     return reply
