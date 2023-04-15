@@ -106,7 +106,7 @@ def issue_to_pr(codebase_path, issue_content):
             print(exc.stderr)
             print("######################")
             messages.append({"role": "assistant", "content": reply})
-            messages.append({"role": "user", "content": exc.stderr.decode('utf-8')})
+            messages.append({"role": "user", "content": f"# Error:\n{exc.stderr.decode('utf-8')}\n\n# Patch to apply:\n\n"})
 
     reply = reply.replace('"', "\"")  # Bash
     return reply
