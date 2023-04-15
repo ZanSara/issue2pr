@@ -69,6 +69,7 @@ def issue_to_pr(codebase_path, issue_content):
 -------
 # Patch to apply:
 
+```
 """
     print("\n#---------#\n"+prompt+"\n#---------#\n")
     
