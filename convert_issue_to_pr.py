@@ -70,7 +70,9 @@ def issue_to_pr(codebase_path, issue_content):
 # Patch to apply:
 
 """
-    print("\n#---------#\n"+prompt+"\n#---------#\n")
+    print("#---------#")
+    print(prompt)
+    print("#---------#")
     
     messages = [
         {"role": "system",  "content": SYSTEM_PROMPT},
@@ -83,17 +85,19 @@ def issue_to_pr(codebase_path, issue_content):
         )
         reply = response["choices"][0]["message"]["content"]
 
-        print("\n---------\n"+reply+"\n---------\n")
+        print("---------")
+        print(reply)
+        print("---------")
 
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply + "\n")
 
         apply_patch="patch -p1 < changes.patch"
         try:
-            apply_command = subprocess.run(apply_patch, shell=True, check=True)
+            apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
             break
         except subprocess.CalledProcessError as exc:
-            print(exc.output)
+            print(exc)
             print(exc.stdout)
             print(exc.stderr)
             # messages.append({"role": "assistant", "content": reply})
