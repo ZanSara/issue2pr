@@ -93,6 +93,8 @@ def issue_to_pr(codebase_path, issue_content):
             apply_command = subprocess.run(apply_patch, shell=True, check=True)
             break
         except subprocess.CalledProcessError as exc:
+            print(exc.output)
+            print(exc.stdout)
             print(exc.stderr)
             # messages.append({"role": "assistant", "content": reply})
             # messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
