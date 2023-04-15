@@ -33,7 +33,9 @@ index 4157dda..7f0642a 100644
 ```
 
 Only respond with the content of the git patch that fixes the issue.
-If the patch is wrong, you will receive the error that was generated. 
+If the patch is wrong, you will receive the error that was generated.
+You should generate an output that does the same thing as before, but 
+does not cause the error.
 """
 
 
