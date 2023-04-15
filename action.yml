@@ -56,7 +56,7 @@ runs:
 
     - id: push_changes
       run: |
-        git checkout -b fix/${{ inputs.issue_number }}
+        git checkout -b issue2pr/fix-${{ inputs.issue_number }}
         git config user.email "bot@github.com"
         git config user.name "GitHub Action"
         git add .
