@@ -1,7 +1,9 @@
 import os
 import sys
 import json
+import pathlib
 import subprocess
+
 import openai
 
 SYSTEM_PROMPT = """
@@ -98,6 +100,13 @@ def issue_to_pr(codebase_path, issue_content):
             apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
             break
         except subprocess.CalledProcessError as exc:
+
+            path = pathlib.Path(codebase_path)
+            rej_files = dir.glob(path / "*.rej")
+            for rf in rej_files:
+                rf.unlink()
+            print("######################")
+            print(os.path.listdir(codebase_path))
             print("######################")
             print(exc)
             print("######################")
