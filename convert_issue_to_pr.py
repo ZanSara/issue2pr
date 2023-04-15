@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-import pathlib
+import glob
 import subprocess
 
 import openai
@@ -103,10 +103,9 @@ def issue_to_pr(codebase_path, issue_content):
             break
         except subprocess.CalledProcessError as exc:
 
-            path = pathlib.Path(codebase_path)
-            rej_files = path.glob(path / "*.rej")
-            for rf in rej_files:
-                rf.unlink()
+            for rej in glob.iglob(os.path.join(codebase_path, '*.rej')):
+                os.remove(rej)
+
             print("######################")
             print(os.path.listdir(codebase_path))
             print("######################")
