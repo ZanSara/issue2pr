@@ -69,7 +69,6 @@ def issue_to_pr(codebase_path, issue_content):
 -------
 # Patch to apply:
 
-```
 """
     print("\n#---------#\n"+prompt+"\n#---------#\n")
     
@@ -86,8 +85,6 @@ def issue_to_pr(codebase_path, issue_content):
 
         print("\n---------\n"+reply+"\n---------\n")
 
-        clean_reply = "\n".join([line for line in reply.split("\n") if not line.startswith("```") and not line.startswith("diff -u")])
-
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply + "\n")
 
@@ -95,12 +92,11 @@ def issue_to_pr(codebase_path, issue_content):
         try:
             apply_command = subprocess.run(apply_patch, shell=True, check=True)
             break
-        except:
-            pass
+        except Exception as exc:
+            print(exc)
             # messages.append({"role": "assistant", "content": reply})
             # messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
-
-        print("FAILED!")
+            print("FAILED!")
 
     reply = reply.replace('"', "\"")  # Bash
     return reply
