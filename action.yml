@@ -68,6 +68,7 @@ runs:
     - id: delete_branch
       if: failure()
       run: |
+        git checkout main
         git branch -D fix/${{ inputs.issue_number }}
       shell: bash
     
