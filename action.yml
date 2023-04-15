@@ -63,6 +63,13 @@ runs:
         git commit -m 'fix issue ${{ inputs.issue_number }}'
         git push -u origin fix/${{ inputs.issue_number }}
       shell: bash
+
+    # Delete the branch in case of failure, so the action can run again
+    - id: delete_branch
+      if: failure()
+      run: |
+        git branch -D fix/${{ inputs.issue_number }}
+      shell: bash
     
     - id: explain
       run: |
