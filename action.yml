@@ -59,9 +59,6 @@ runs:
         git checkout -b fix/${{ inputs.issue_number }}
         git config user.email "bot@github.com"
         git config user.name "GitHub Action"
-
-        rm changes.patch
-
         git add .
         git commit -m 'fix issue ${{ inputs.issue_number }}'
         git push -u origin fix/${{ inputs.issue_number }}
@@ -71,6 +68,8 @@ runs:
       run: |
         wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/explain_pr.py
         python explain_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}' >> explanation.txt
+
+        rm changes.patch
       shell: bash
 
     - id: open_pr
