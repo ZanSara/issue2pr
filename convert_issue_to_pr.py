@@ -96,6 +96,7 @@ def issue_to_pr(codebase_path, issue_content):
         apply_patch="patch -p1 < changes.patch"
         try:
             apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
+            break
         except subprocess.CalledProcessError as exc:
             print("######################")
             print(exc)
