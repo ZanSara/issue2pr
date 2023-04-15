@@ -28,6 +28,8 @@ that your changes will cause.
 
 Use a professional tone. Never repeat yourself.
 Be as clear and concise as possible.
+Do not ask for the PR to be reviewed or merged: 
+the contributors are already aware.
 You can use markdown to structure your reply.
 
 Here is an example answer for an issue about divisions by zero:

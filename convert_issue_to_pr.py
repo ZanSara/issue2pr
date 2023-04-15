@@ -85,6 +85,7 @@ def issue_to_pr(codebase_path, issue_content):
         {"role": "user", "content": prompt}
     ]
 
+    solved=False
     for _ in range(3):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -102,7 +103,8 @@ def issue_to_pr(codebase_path, issue_content):
         apply_patch="patch -p1 < changes.patch"
         try:
             apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
-            break
+            reply = reply.replace('"', "\"")  # Bash
+            return reply
         except subprocess.CalledProcessError as exc:
 
             for rej in glob.iglob(os.path.join(codebase_path, '*.rej')):
@@ -120,9 +122,7 @@ def issue_to_pr(codebase_path, issue_content):
             messages.append({"role": "assistant", "content": reply})
             messages.append({"role": "user", "content": f"# Error:\n{exc.stderr.decode('utf-8')}\n\n# Patch to apply:\n\n"})
 
-    reply = reply.replace('"', "\"")  # Bash
-    return reply
-
+    raise RuntimeError("Failed to solve the issue :(")
 
 if __name__ == "__main__":
     openai.api_key = sys.argv[1]
