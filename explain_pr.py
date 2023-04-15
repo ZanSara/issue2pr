@@ -4,16 +4,27 @@ import json
 import subprocess
 import openai
 
-SYSTEM_PROMPT = """
-You are a contributor to an open source library.
-You have created a patch that will fix one specific issue.
-Given the description of the issue and the patch file, write
-down an explanation for the maintaners that can help them 
+SYSTEM_PROMPT = lambda issue, diff: f"""
+You are a contributor to an open source library called `math-in-python`.
+You just opened a PR to fix this issue:
+
+```
+{issue}
+```
+
+Your PR is the following:
+
+```
+{diff}
+```
+
+Write down an explanation for the maintaners that can help them 
 understand in detail your changes and review them.
 
-Use a professional and helpful tone. Explain the patch in detail
-but never repeat yourself. Be as clear and concise as possible.
-You can use markdown to highlight code and structure your reply.
+Use a professional tone. 
+Explain the PR in detail but never repeat yourself. 
+Be as clear and concise as possible.
+You can use markdown to structure your reply.
 """
 
 def explain_pr(issue_content, patch_path="changes.patch"):
@@ -22,11 +33,9 @@ def explain_pr(issue_content, patch_path="changes.patch"):
     with open(patch_path, 'r') as patch_file:
         patch = patch_file.read()
 
-    prompt = f"ISSUE:\n\n{issue_data}\n\nPATCH:{patch}"
-    print("\n#---------#\n"+prompt+"\n#---------#\n")
+    prompt = SYSTEM_PROMPT(f"# {issue_data['title']}\n\n{issue_data['body']}", patch)
     
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": prompt}
     ]
     response = openai.ChatCompletion.create(

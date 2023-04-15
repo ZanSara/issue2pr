@@ -61,7 +61,7 @@ runs:
         git config user.name "GitHub Action"
         git add .
         git commit -m 'fix issue ${{ inputs.issue_number }}'
-        git push -u origin fix/${{ inputs.issue_number }}
+        git push -u origin issue2pr/fix-${{ inputs.issue_number }}
       shell: bash
 
     # Delete the branch in case of failure, so the action can run again
@@ -69,7 +69,7 @@ runs:
       if: failure()
       run: |
         git checkout main
-        git branch -D fix/${{ inputs.issue_number }}
+        git branch -D issue2pr/fix-${{ inputs.issue_number }}
       shell: bash
     
     - id: explain
