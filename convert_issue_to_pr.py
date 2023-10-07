@@ -102,7 +102,7 @@ def issue_to_pr(codebase_path, issue_content):
     with open("changes.patch", "w") as patch_file:
         patch_file.write(reply + "\n")
 
-    apply_patch="patch -p1 < changes.patch"
+    apply_patch="git apply changes.patch"
     try:
         apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
         reply = reply.replace('"', "\"")  # Bash
