@@ -8,8 +8,7 @@ import openai
 
 SYSTEM_PROMPT = """
 You are given a codebase_path and the content of a GitHub issue. 
-Respond with the content of a patch file that will fix the issue. Do not describe your output.
-
+Respond with the content of a patch file that will fix the issue.
 Your output should look like this:
 
 ```
@@ -35,15 +34,15 @@ index 4157dda..7f0642a 100644
 ```
 
 Only respond with the content of the git patch that fixes the issue.
-If the patch is wrong, you will receive the error that was generated.
-You should generate an output that does the same thing as before, but 
-does not cause the error.
 """
 
 
 def issue_to_pr(codebase_path, issue_content):
+
+    # Reads the issue
     issue_data = json.loads(issue_content)
 
+    # Loads the codebase content
     codebase_content = ""
     files_to_load = os.listdir(codebase_path)
 
@@ -58,10 +57,10 @@ def issue_to_pr(codebase_path, issue_content):
         elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load and not "explain_pr.py" in file_to_load:
             print(f"   is a file")
             codebase_content += f"`{codebase_path}/{file_to_load}`:\n\n"
-            with open(codebase_path + "/" + file_to_load, 'r') as code_file:
+            with open(f"{codebase_path}/{file_to_load}", 'r') as code_file:
                 codebase_content += f"```\n{code_file.read()}\n```\n\n"
 
-
+    # Build the prompt
     prompt = f"""
 # Codebase
 
@@ -76,53 +75,57 @@ def issue_to_pr(codebase_path, issue_content):
 # Patch to apply:
 
 """
-    print("#---------#")
+
+    # Query GPT-4
+    print("*********************")
     print(prompt)
-    print("#---------#")
-    
+    print("*********************")    
+
     messages = [
         {"role": "system",  "content": SYSTEM_PROMPT},
         {"role": "user", "content": prompt}
     ]
 
-    solved=False
-    for _ in range(3):
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages
-        )
-        reply = response["choices"][0]["message"]["content"]
+    # solved=False
+    # for _ in range(3):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages
+    )
+    reply = response["choices"][0]["message"]["content"]
 
-        print("---------")
-        print(reply)
-        print("---------")
 
-        with open("changes.patch", "w") as patch_file:
-            patch_file.write(reply + "\n")
+    print("#*********************")
+    print(reply)
+    print("#*********************") 
 
-        apply_patch="patch -p1 < changes.patch"
-        try:
-            apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
-            reply = reply.replace('"', "\"")  # Bash
-            return reply
-        except subprocess.CalledProcessError as exc:
+    with open("changes.patch", "w") as patch_file:
+        patch_file.write(reply + "\n")
 
-            for rej in glob.iglob(os.path.join(codebase_path, '*.rej')):
-                os.remove(rej)
+    apply_patch="patch -p1 < changes.patch"
+    try:
+        apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
+        reply = reply.replace('"', "\"")  # Bash
+        return reply
 
-            print("######################")
-            print(os.listdir(codebase_path))
-            print("######################")
-            print(exc)
-            print("######################")
-            print(exc.stdout)
-            print("######################")
-            print(exc.stderr)
-            print("######################")
-            messages.append({"role": "assistant", "content": reply})
-            messages.append({"role": "user", "content": f"# Error:\n{exc.stderr.decode('utf-8')}\n\n# Patch to apply:\n\n"})
+    except subprocess.CalledProcessError as exc:
 
-    raise RuntimeError("Failed to solve the issue :(")
+        # for rej in glob.iglob(os.path.join(codebase_path, '*.rej')):
+        #     os.remove(rej)
+
+        # print("######################")
+        # print(os.listdir(codebase_path))
+        # print("######################")
+        # print(exc)
+        # print("######################")
+        # print(exc.stdout)
+        # print("######################")
+        # print(exc.stderr)
+        # print("######################")
+        # messages.append({"role": "assistant", "content": reply})
+        # messages.append({"role": "user", "content": f"# Error:\n{exc.stderr.decode('utf-8')}\n\n# Patch to apply:\n\n"})
+
+        raise RuntimeError("Failed to solve the issue :(")
 
 if __name__ == "__main__":
     openai.api_key = sys.argv[1]

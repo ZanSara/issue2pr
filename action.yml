@@ -58,7 +58,7 @@ runs:
       run: |
         git checkout -b issue2pr/fix-${{ inputs.issue_number }}
         git config user.email "bot@github.com"
-        git config user.name "GitHub Action"
+        git config user.name "Issue2PR Bot"
         git add .
         git commit -m 'fix issue ${{ inputs.issue_number }}'
         git push -u origin issue2pr/fix-${{ inputs.issue_number }}

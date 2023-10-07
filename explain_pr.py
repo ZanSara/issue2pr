@@ -7,17 +7,17 @@ import openai
 SYSTEM_PROMPT = lambda issue, diff: f"""
 You just opened a PR to fix this issue:
 
-```
+
 {issue}
-```
+
 
 Your PR is the following:
 
-```
-{diff}
-```
 
-Write the body of the PR description. It should be extremely concise 
+{diff}
+
+
+Write the body of the PR description. It should be technical, concise 
 and contain a very brief description of what is the impact of your
 PR on the codebase's behavior.
 
@@ -30,21 +30,20 @@ Use a professional tone. Never repeat yourself.
 Be as clear and concise as possible.
 Do not ask for the PR to be reviewed or merged: 
 the contributors are already aware.
-You can use markdown to structure your reply.
+You must use Markdown to structure your reply.
 
 Here is an example answer for an issue about divisions by zero:
 
-```
-This PR makes the `divide` function fail with a helpful message
-when `divisor=0`, which looks like:
+    This PR makes the `divide` function fail with a helpful message
+    when `divisor=0`, which looks like:
 
-```
-InvalidDivisorError: no number can be divided by zero.
-```
+    ```
+    InvalidDivisorError: no number can be divided by zero.
+    ```
 
-Please make sure that the direct floats comparison I'm using
-does not cause floating point comparison issues.
-```
+    Please make sure that the direct floats comparison I'm using
+    does not cause floating point comparison issues.
+
 """
 
 def explain_pr(issue_content, patch_path="changes.patch"):
@@ -63,7 +62,10 @@ def explain_pr(issue_content, patch_path="changes.patch"):
         messages=messages
     )
     reply = response["choices"][0]["message"]["content"]
-    print("\n---------\n"+reply+"\n---------\n")
+    
+    print("#*********************")
+    print(reply)
+    print("#*********************") 
     
     reply = reply.replace('"', "\"")  # Bash
     return reply
