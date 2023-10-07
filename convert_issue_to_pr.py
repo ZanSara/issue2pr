@@ -1,60 +1,43 @@
 import os
 import sys
 import json
-import glob
 import subprocess
-
 import openai
 
 SYSTEM_PROMPT = """
 You are given a codebase_path and the content of a GitHub issue. 
-Respond with the content of a patch file that will fix the issue.
-Your output should look like:
+Respond with the content of a patch file that will fix the issue. Do not describe your output.
 
+Your output should look like this:
 
-    --- a/testfile.txt
-    +++ b/testfile.txt
-    @@ -1 +1 @@
-    -this is the original content
-    +this is the new content
+```
+--- a/testfile.txt
++++ b/testfile.txt
+@@ -1 +1 @@
+-this is the original content
++this is the new content
+```
 
+and NOT like this:
 
-NOT like:
-
-
-    diff --git a/testfile.txt b/testfile.txt
-    index 4157dda..7f0642a 100644
-    --- a/testfile.txt
-    +++ b/testfile.txt
-    @@ -1 +1 @@
-    -this is the original content
-    +this is the new content
-
-
-and NOT with backticks like:
-
-
-    ```
-    --- a/testfile.txt
-    +++ b/testfile.txt
-    @@ -1 +1 @@
-    -this is the original content
-    +this is the new content
-    ```
-
+```
+diff --git a/testfile.txt b/testfile.txt
+index 4157dda..7f0642a 100644
+--- a/testfile.txt
++++ b/testfile.txt
+@@ -1 +1 @@
+-this is the original content
++this is the new content
+```
 
 Only respond with the content of the git patch that fixes the issue.
-DO NOT format your output with backticks: it will be written directly 
-to a patch file.
+If the patch is wrong, you will receive the error that was generated. 
 """
 
 
 def issue_to_pr(codebase_path, issue_content):
-
-    # Reads the issue
     issue_data = json.loads(issue_content)
 
-    # Loads the codebase content
     codebase_content = ""
     files_to_load = os.listdir(codebase_path)
 
@@ -69,10 +52,10 @@ def issue_to_pr(codebase_path, issue_content):
         elif os.path.isfile(file_to_load) and not "convert_issue_to_pr.py" in file_to_load and not "explain_pr.py" in file_to_load:
             print(f"   is a file")
             codebase_content += f"`{codebase_path}/{file_to_load}`:\n\n"
-            with open(f"{codebase_path}/{file_to_load}", 'r') as code_file:
+            with open(codebase_path + "/" + file_to_load, 'r') as code_file:
                 codebase_content += f"```\n{code_file.read()}\n```\n\n"
 
-    # Build the prompt
+
     prompt = f"""
 # Codebase
 
@@ -87,57 +70,37 @@ def issue_to_pr(codebase_path, issue_content):
 # Patch to apply:
 
 """
-
-    # Query GPT-4
-    print("*********************")
-    print(prompt)
-    print("*********************")    
-
+    print("\n#---------#\n"+prompt+"\n#---------#\n")
+    
     messages = [
         {"role": "system",  "content": SYSTEM_PROMPT},
         {"role": "user", "content": prompt}
     ]
-
-    # solved=False
-    # for _ in range(3):
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
+    for i in range(3):
+        response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
         messages=messages
-    )
-    reply = response["choices"][0]["message"]["content"].strip()
+        )
+        reply = response["choices"][0]["message"]["content"]
 
-    with open("changes.patch", "w") as patch_file:
-        patch_file.write(reply + "\n")
+        print("\n---------\n"+reply+"\n---------\n")
 
-    with open("changes.patch", "r") as patch_file:
-        print("#*********************")
-        print(patch_file.read())
-        print("#*********************") 
+        with open("changes.patch", "w") as patch_file:
+            patch_file.write(reply + "\n")
 
-    apply_patch="tr -d '\015' < changes.patch > fixed-changes.patch && patch -p1 < fixed-changes.patch"
-    try:
-        apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
-        reply = reply.replace('"', "\"")  # Bash
-        return reply
+        apply_patch="patch -p1 < changes.patch"
+        try:
+            apply_command = subprocess.run(apply_patch, shell=True, check=True)
+            break
+        except Exception as exc:
+            print(exc)
+            # messages.append({"role": "assistant", "content": reply})
+            # messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
+            print("FAILED!")
 
-    except subprocess.CalledProcessError as exc:
+    reply = reply.replace('"', "\"")  # Bash
+    return reply
 
-        # for rej in glob.iglob(os.path.join(codebase_path, '*.rej')):
-        #     os.remove(rej)
-
-        print("######################")
-        print(os.listdir(codebase_path))
-        print("######################")
-        print(exc)
-        print("######################")
-        print(exc.stdout)
-        print("######################")
-        print(exc.stderr)
-        print("######################")
-        # messages.append({"role": "assistant", "content": reply})
-        # messages.append({"role": "user", "content": f"# Error:\n{exc.stderr.decode('utf-8')}\n\n# Patch to apply:\n\n"})
-
-        raise RuntimeError("Failed to solve the issue :(") from exc
 
 if __name__ == "__main__":
     openai.api_key = sys.argv[1]
