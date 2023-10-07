@@ -44,6 +44,7 @@ Here is an example answer for an issue about divisions by zero:
     Please make sure that the direct floats comparison I'm using
     does not cause floating point comparison issues.
 
+Please output only the text of the PR description and nothing else.
 """
 
 def explain_pr(issue_content, patch_path="changes.patch"):

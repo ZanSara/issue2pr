@@ -31,7 +31,6 @@ index 4157dda..7f0642a 100644
 ```
 
 Only respond with the content of the git patch that fixes the issue.
-If the patch is wrong, you will receive the error that was generated. 
 """
 
 
@@ -70,7 +69,9 @@ def issue_to_pr(codebase_path, issue_content):
 # Patch to apply:
 
 """
-    print("\n#---------#\n"+prompt+"\n#---------#\n")
+    print("###################")
+    print(prompt)
+    print("###################")
     
     messages = [
         {"role": "system",  "content": SYSTEM_PROMPT},
@@ -82,9 +83,11 @@ def issue_to_pr(codebase_path, issue_content):
         messages=messages
         )
         reply = response["choices"][0]["message"]["content"]
-
-        print("\n---------\n"+reply+"\n---------\n")
-
+        
+        print("###################")
+        print(reply)
+        print("###################")
+    
         with open("changes.patch", "w") as patch_file:
             patch_file.write(reply + "\n")
 
@@ -94,9 +97,6 @@ def issue_to_pr(codebase_path, issue_content):
             break
         except Exception as exc:
             print(exc)
-            # messages.append({"role": "assistant", "content": reply})
-            # messages.append({"role": "user", "content": "git: the patch is invalid.\n Solving your issue...\nPatch to apply:"})
-            print("FAILED!")
 
     reply = reply.replace('"', "\"")  # Bash
     return reply

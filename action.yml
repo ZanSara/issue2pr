@@ -76,7 +76,7 @@ runs:
       run: |
         wget https://raw.githubusercontent.com/ZanSara/issue2pr/main/explain_pr.py
         python explain_pr.py ${{ inputs.openai_api_key }} '${{ steps.read_issue.outputs.issue-data }}' >> explanation.txt
-
+        cat explanation.txt
         rm changes.patch
       shell: bash
 
