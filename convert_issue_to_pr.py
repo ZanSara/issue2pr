@@ -9,30 +9,42 @@ import openai
 SYSTEM_PROMPT = """
 You are given a codebase_path and the content of a GitHub issue. 
 Respond with the content of a patch file that will fix the issue.
-Your output should look like this:
+Your output should look like:
 
 
---- a/testfile.txt
-+++ b/testfile.txt
-@@ -1 +1 @@
--this is the original content
-+this is the new content
+    --- a/testfile.txt
+    +++ b/testfile.txt
+    @@ -1 +1 @@
+    -this is the original content
+    +this is the new content
 
 
-and NOT like this:
+NOT like:
 
 
-diff --git a/testfile.txt b/testfile.txt
-index 4157dda..7f0642a 100644
---- a/testfile.txt
-+++ b/testfile.txt
-@@ -1 +1 @@
--this is the original content
-+this is the new content
+    diff --git a/testfile.txt b/testfile.txt
+    index 4157dda..7f0642a 100644
+    --- a/testfile.txt
+    +++ b/testfile.txt
+    @@ -1 +1 @@
+    -this is the original content
+    +this is the new content
+
+
+and NOT with backticks like:
+
+
+    ```
+    --- a/testfile.txt
+    +++ b/testfile.txt
+    @@ -1 +1 @@
+    -this is the original content
+    +this is the new content
+    ```
 
 
 Only respond with the content of the git patch that fixes the issue.
-Don't format your output with backticks: it will be written directly 
+DO NOT format your output with backticks: it will be written directly 
 to a patch file.
 """
 
