@@ -94,13 +94,13 @@ def issue_to_pr(codebase_path, issue_content):
     )
     reply = response["choices"][0]["message"]["content"].strip()
 
-
-    print("#*********************")
-    print(reply)
-    print("#*********************") 
-
     with open("changes.patch", "w") as patch_file:
-        patch_file.write(reply + "\n")
+        patch_file.write(reply + "\n\n")
+
+    with open("changes.patch", "r") as patch_file:
+        print("#*********************")
+        print(patch_file.read())
+        print("#*********************") 
 
     apply_patch="git apply changes.patch"
     try:
