@@ -114,7 +114,7 @@ def issue_to_pr(codebase_path, issue_content):
         print(patch_file.read())
         print("#*********************") 
 
-    apply_patch="patch -p1 < changes.patch < EOF"
+    apply_patch="tr -d '\015' < changes.patch > fixed-changes.patch && patch -p1 < fixed-changes.patch"
     try:
         apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
         reply = reply.replace('"', "\"")  # Bash
