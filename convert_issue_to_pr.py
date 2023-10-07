@@ -107,14 +107,14 @@ def issue_to_pr(codebase_path, issue_content):
     reply = response["choices"][0]["message"]["content"].strip()
 
     with open("changes.patch", "w") as patch_file:
-        patch_file.write(reply + "\n\n")
+        patch_file.write(reply + "\n")
 
     with open("changes.patch", "r") as patch_file:
         print("#*********************")
         print(patch_file.read())
         print("#*********************") 
 
-    apply_patch="git apply changes.patch"
+    apply_patch="patch -p1 < changes.patch"
     try:
         apply_command = subprocess.run(apply_patch, capture_output=True, shell=True, check=True)
         reply = reply.replace('"', "\"")  # Bash
