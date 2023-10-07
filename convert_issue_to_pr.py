@@ -92,7 +92,7 @@ def issue_to_pr(codebase_path, issue_content):
         model="gpt-4",
         messages=messages
     )
-    reply = response["choices"][0]["message"]["content"]
+    reply = response["choices"][0]["message"]["content"].strip()
 
 
     print("#*********************")
@@ -125,7 +125,7 @@ def issue_to_pr(codebase_path, issue_content):
         # messages.append({"role": "assistant", "content": reply})
         # messages.append({"role": "user", "content": f"# Error:\n{exc.stderr.decode('utf-8')}\n\n# Patch to apply:\n\n"})
 
-        raise RuntimeError("Failed to solve the issue :(")
+        raise RuntimeError("Failed to solve the issue :(") from exc
 
 if __name__ == "__main__":
     openai.api_key = sys.argv[1]
