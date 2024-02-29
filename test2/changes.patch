@@ -1,0 +1,11 @@
+--- test.py	2023-03-29 01:46:59.243373724 +0200
++++ test2.py	2023-03-28 00:31:49.076270399 +0200
+@@ -3,7 +3,4 @@
+     """
+     Adds two numbers together
+     """
+-    return first_number - second_number
+-
+-if __name__ == "__main__":
+-    print("hello")
++    return first_number + second_number
